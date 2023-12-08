@@ -35,15 +35,16 @@ jobs:
 
       # Build Docker image
       - run:
-          name: Build Docker image
+          name: Build Docker image and Scan using Trivy
           command: |
-            docker build -t your_image_name .
+            docker build -t flaskapp .
+            trivy flaskapp
 
       # Scan Docker image using Trivy
-      - run:
-          name: Scan Docker image with Trivy
-          command: |
-            trivy your_image_name
+      # - run:
+      #     name: Scan Docker image with Trivy
+      #     command: |
+      #       trivy your_image_name
 
       # Run Bandit for security checks on the code
       - run:
