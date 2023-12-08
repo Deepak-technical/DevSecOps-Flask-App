@@ -15,23 +15,30 @@ jobs:
           command: |
             pip install -r requirements.txt
 
+      # Install Bandit
+      - run:
+          name: Install Bandit
+          command: |
+            pip install bandit
+
+      # Install Docker
+      - run:
+          name: Install Docker
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y docker.io  # Adjust for other OS if needed
+
+      # Install DockerScout (Trivy)
+      - run:
+          name: Install DockerScout (Trivy)
+          command: |
+            docker pull aquasec/trivy
+
       # Run Bandit for security checks
       - run:
           name: Run Bandit
           command: |
             bandit -r . -ll -ii -x venv  # Replace 'venv' with any directories to exclude
-
-      # Build Docker image
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t your_image_name .
-
-      # DockerScout container scanning
-      - run:
-          name: DockerScout scanning
-          command: |
-            docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/Dockerfile:/Dockerfile aquasec/trivy your_image_name
 
 workflows:
   version: 2
