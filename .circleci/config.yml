@@ -8,6 +8,11 @@ jobs:
     steps:
       - checkout
 
+      # Setup remote Docker environment
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+
       # Install dependencies
       - run:
           name: Install dependencies
@@ -20,11 +25,15 @@ jobs:
           command: |
             pip install bandit
 
+      # Install Trivy
+      - run:
+          name: Install Trivy
+          command: |
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update && sudo apt-get install trivy
+
       # Build Docker image
-      - setup_remote_docker:
-          version: 20.10.14
-          docker_layer_caching: true  
-           
       - run:
           name: Build Docker image
           command: |
@@ -34,7 +43,7 @@ jobs:
       - run:
           name: Scan Docker image with Trivy
           command: |
-            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy your_image_name
+            trivy your_image_name
 
       # Run Bandit for security checks on the code
       - run:
