@@ -37,8 +37,8 @@ jobs:
       - run:
           name: Build Docker image and Scan using Trivy
           command: |
-            docker build -t flaskapp .
-            trivy flaskapp
+            docker build -t flaskapp  .
+            trivy image flaskapp
 
       # Scan Docker image using Trivy
       # - run:
