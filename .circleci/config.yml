@@ -22,7 +22,9 @@ jobs:
             pip install bandit
 
       
-
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true   
       # Install DockerScout (Trivy)
       - run:
           name: Install DockerScout (Trivy)
