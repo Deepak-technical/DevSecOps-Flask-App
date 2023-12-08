@@ -4,7 +4,6 @@ jobs:
   build:
     docker:
        - image: cimg/python:3.8.8
-    
 
     steps:
       - checkout
@@ -21,17 +20,23 @@ jobs:
           command: |
             pip install bandit
 
-      
+      # Build Docker image
       - setup_remote_docker:
           version: 20.10.14
-          docker_layer_caching: true   
-      # Install DockerScout (Trivy)
+          docker_layer_caching: true  
+           
       - run:
-          name: Install DockerScout (Trivy)
+          name: Build Docker image
           command: |
-            docker pull aquasec/trivy
+            docker build -t your_image_name .
 
-      # Run Bandit for security checks
+      # Scan Docker image using Trivy
+      - run:
+          name: Scan Docker image with Trivy
+          command: |
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy your_image_name
+
+      # Run Bandit for security checks on the code
       - run:
           name: Run Bandit
           command: |
