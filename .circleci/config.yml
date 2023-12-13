@@ -24,7 +24,11 @@ jobs:
           name: Install Bandit
           command: |
             pip install bandit
-
+      # Run Bandit for security checks on the code
+      - run:
+          name: Run Bandit
+          command: |
+            bandit -r . -ll -ii -x venv  # Replace 'venv' with any directories to exclude
       # Install Trivy
       - run:
           name: Install Trivy
@@ -53,12 +57,6 @@ jobs:
           command: |
             docker tag flaskapp "$DOCKER_USERNAME"/flaskapp2
             docker push "$DOCKER_USERNAME"/flaskapp2
-
-      # Run Bandit for security checks on the code
-      - run:
-          name: Run Bandit
-          command: |
-            bandit -r . -ll -ii -x venv  # Replace 'venv' with any directories to exclude
 
 workflows:
   version: 2
