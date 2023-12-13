@@ -28,7 +28,8 @@ jobs:
       - run:
           name: Run Bandit
           command: |
-            bandit -r . -ll -ii -x venv  # Replace 'venv' with any directories to exclude
+           bandit -r . -ll -ii -x venv && echo "No security issues found" || exit 1
+
       # Install Trivy
       - run:
           name: Install Trivy
